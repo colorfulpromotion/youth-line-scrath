@@ -723,13 +723,16 @@ if (resultData.number) {
     "https://script.google.com/macros/s/AKfycbxlbJWyeztiEt1OAi1rX4i3s8cO2vBA9H-9oivGRKzZCBp-7qFKYxJU00Adm697_Q5T/exec?page=admin&number=" +
     encodeURIComponent(resultData.number);
 
+  const staffArea = document.createElement("div");
+  staffArea.style.marginTop = "20px";
+  staffArea.style.textAlign = "center";
+
   const staffButton = document.createElement("a");
   staffButton.href = adminUrl;
   staffButton.target = "_blank";
-  staffButton.textContent = "スタッフ確認・使用済みにする";
+  staffButton.textContent = "スタッフ確認はこちら";
 
   staffButton.style.display = "block";
-  staffButton.style.marginTop = "20px";
   staffButton.style.padding = "14px";
   staffButton.style.background = "#111";
   staffButton.style.color = "#fff";
@@ -738,7 +741,18 @@ if (resultData.number) {
   staffButton.style.textDecoration = "none";
   staffButton.style.fontWeight = "bold";
 
-  document.getElementById("numberLabel").appendChild(staffButton);
+  const staffNote = document.createElement("div");
+  staffNote.textContent = "※スタッフ操作専用";
+  staffNote.style.marginTop = "7px";
+  staffNote.style.fontSize = "12px";
+  staffNote.style.color = "#777";
+
+  staffArea.appendChild(staffButton);
+  staffArea.appendChild(staffNote);
+
+  document
+    .getElementById("numberLabel")
+    .appendChild(staffArea);
 }
 
   if (
