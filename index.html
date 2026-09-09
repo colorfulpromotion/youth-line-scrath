@@ -717,7 +717,29 @@ function revealResult() {
         resultData.number;
 
   }
+// スタッフ確認用の管理画面URLを作成
+if (resultData.number) {
+  const adminUrl =
+    "https://script.google.com/macros/s/AKfycbxlbJWyeztiEt1OAi1rX4i3s8cO2vBA9H-9oivGRKzZCBp-7qFKYxJU00Adm697_Q5T/exec?page=admin&number=" +
+    encodeURIComponent(resultData.number);
 
+  const staffButton = document.createElement("a");
+  staffButton.href = adminUrl;
+  staffButton.target = "_blank";
+  staffButton.textContent = "スタッフ確認・使用済みにする";
+
+  staffButton.style.display = "block";
+  staffButton.style.marginTop = "20px";
+  staffButton.style.padding = "14px";
+  staffButton.style.background = "#111";
+  staffButton.style.color = "#fff";
+  staffButton.style.textAlign = "center";
+  staffButton.style.borderRadius = "10px";
+  staffButton.style.textDecoration = "none";
+  staffButton.style.fontWeight = "bold";
+
+  document.getElementById("numberLabel").appendChild(staffButton);
+}
 
   if (
     resultData.prize ===
