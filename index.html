@@ -717,29 +717,27 @@ function revealResult() {
         resultData.number;
 
   }
-// スタッフ確認用の管理画面URLを作成
+// スタッフ操作：その場で使用済みにする
 if (resultData.number) {
-  const adminUrl =
-    "https://script.google.com/macros/s/AKfycbxlbJWyeztiEt1OAi1rX4i3s8cO2vBA9H-9oivGRKzZCBp-7qFKYxJU00Adm697_Q5T/exec?page=admin&number=" +
-    encodeURIComponent(resultData.number);
 
   const staffArea = document.createElement("div");
   staffArea.style.marginTop = "20px";
   staffArea.style.textAlign = "center";
 
-  const staffButton = document.createElement("a");
-  staffButton.href = adminUrl;
-  staffButton.target = "_blank";
+  const staffButton = document.createElement("button");
+  staffButton.type = "button";
   staffButton.textContent = "スタッフ確認はこちら";
 
   staffButton.style.display = "block";
+  staffButton.style.width = "100%";
   staffButton.style.padding = "14px";
   staffButton.style.background = "#111";
   staffButton.style.color = "#fff";
   staffButton.style.textAlign = "center";
   staffButton.style.borderRadius = "10px";
-  staffButton.style.textDecoration = "none";
+  staffButton.style.border = "none";
   staffButton.style.fontWeight = "bold";
+  staffButton.style.fontSize = "16px";
 
   const staffNote = document.createElement("div");
   staffNote.textContent = "※スタッフ操作専用";
@@ -747,14 +745,104 @@ if (resultData.number) {
   staffNote.style.fontSize = "12px";
   staffNote.style.color = "#777";
 
+  const staffResult = document.createElement("div");
+  staffResult.style.marginTop = "10px";
+  staffResult.style.fontSize = "14px";
+
+  staffButton.addEventListener("click", function () {
+
+    const ok = confirm(
+      "この特典を使用済みにしますか？\nスタッフ操作であることを確認してください。"
+    );
+
+    if (!ok) return;
+
+    staffButton.disabled = true;
+    staffButton.textContent = "処理中...";
+
+    const callbackName =
+      "staffUseCallback_" +
+      Date.now() +
+      "_" +
+      Math.random().toString(36).slice(2);
+
+    const script = document.createElement("script");
+
+    window[callbackName] = function (data) {
+
+      if (data && data.ok) {
+
+        if (data.used) {
+          staffResult.textContent =
+            "この特典はすでに使用済みです。";
+          staffResult.style.color = "#b45309";
+        } else {
+          staffResult.textContent =
+            "使用済みに変更しました。";
+          staffResult.style.color = "#15803d";
+        }
+
+        staffButton.textContent = "使用済み";
+        staffButton.disabled = true;
+        staffButton.style.background = "#777";
+
+      } else {
+
+        staffResult.textContent =
+          data && data.message
+            ? data.message
+            : "エラーが発生しました。";
+
+        staffResult.style.color = "#b91c1c";
+
+        staffButton.disabled = false;
+        staffButton.textContent =
+          "スタッフ確認はこちら";
+      }
+
+      delete window[callbackName];
+
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+
+    const baseUrl =
+      "https://script.google.com/macros/s/AKfycbxlbJWyeztiEt1OAi1rX4i3s8cO2vBA9H-9oivGRKzZCBp-7qFKYxJU00Adm697_Q5T/exec";
+
+    script.src =
+      baseUrl +
+      "?action=staffUse" +
+      "&number=" +
+      encodeURIComponent(resultData.number) +
+      "&callback=" +
+      encodeURIComponent(callbackName);
+
+    script.onerror = function () {
+
+      staffResult.textContent =
+        "通信エラーが発生しました。";
+
+      staffResult.style.color = "#b91c1c";
+
+      staffButton.disabled = false;
+      staffButton.textContent =
+        "スタッフ確認はこちら";
+
+      delete window[callbackName];
+    };
+
+    document.body.appendChild(script);
+  });
+
   staffArea.appendChild(staffButton);
   staffArea.appendChild(staffNote);
+  staffArea.appendChild(staffResult);
 
   document
     .getElementById("numberLabel")
     .appendChild(staffArea);
 }
-
   if (
     resultData.prize ===
     "ハズレ"
