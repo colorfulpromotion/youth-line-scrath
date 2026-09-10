@@ -738,6 +738,11 @@ if (resultData.number) {
   staffButton.style.border = "none";
   staffButton.style.fontWeight = "bold";
   staffButton.style.fontSize = "16px";
+  if (resultData.status === "使用済み") {
+  staffButton.textContent = "使用済み";
+  staffButton.disabled = true;
+  staffButton.style.background = "#888";
+}
 
   const staffNote = document.createElement("div");
   staffNote.textContent = "※スタッフ操作専用";
@@ -748,6 +753,11 @@ if (resultData.number) {
   const staffResult = document.createElement("div");
   staffResult.style.marginTop = "10px";
   staffResult.style.fontSize = "14px";
+
+  if (resultData.status === "使用済み") {
+  staffResult.textContent = "この特典はすでに使用済みです。";
+  staffResult.style.color = "#c45a00";
+}
 
   staffButton.addEventListener("click", function () {
 
