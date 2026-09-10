@@ -975,22 +975,25 @@ async function start() {
     }
 
 
-    setupScratch();
+   if (resultData.already) {
+  // 今月すでに引いている場合はスクラッチを出さず結果を表示
+  revealResult();
 
+  if (resultData.status === "使用済み") {
+    statusEl.textContent =
+      "この特典はすでに使用済みです。";
+  } else {
+    statusEl.textContent =
+      "今月はすでにスクラッチ済みです。";
+  }
 
-    if (
-      resultData.already
-    ) {
+} else {
+  // 今月初回だけスクラッチを表示
+  setupScratch();
 
-      statusEl.textContent =
-        "前回の抽選結果を表示します。";
-
-    } else {
-
-      statusEl.textContent =
-        "スクラッチを削ってください！";
-
-    }
+  statusEl.textContent =
+    "スクラッチを削ってください！";
+}
 
 
     loading.style.display =
